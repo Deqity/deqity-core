@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts\TokenizedEquity.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> TokenizedEquity.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">93.68% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>89/95</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">78.13% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>50/64</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">85.71% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>12/14</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">93.88% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>92/98</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-yes">54×</span>
+<span class="cline-any cline-yes">54×</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-yes">33×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">27×</span>
+<span class="cline-any cline-yes">27×</span>
+<span class="cline-any cline-yes">27×</span>
+<span class="cline-any cline-yes">27×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: GPL-3.0
+&nbsp;
+pragma solidity ^0.8.9;
+&nbsp;
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+&nbsp;
+/** @title Tokenized Equity V1
+ *  @notice Allows user to tokenize the equity of their organization and sell it to investors all over the world.
+ *  @author MaximilianFullStack
+ */
+contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
+    using SafeMath for uint256;
+&nbsp;
+    enum SaleStatus {
+        CLOSED,
+        OPEN
+    }
+    SaleStatus status;
+&nbsp;
+    address public immutable i_factory;
+    uint256 public immutable i_adminFee;
+    uint256 public totalShares;
+    uint256 public dillutionSharePrice;
+    bool public initilzied;
+&nbsp;
+    address[] public initlalShareHolders;
+    address[] public shareHolders;
+&nbsp;
+    mapping(address =&gt; uint256) public shareHolderShares;
+    mapping(address =&gt; uint256) public equity;
+    mapping(address =&gt; uint256) public initialEquity;
+    mapping(address =&gt; uint256) public peerToPeerSharePrice;
+    mapping(address =&gt; uint256) public peerToPeerSharesForSale;
+&nbsp;
+    /* === CONSTRUCTOR ===*/
+&nbsp;
+    constructor(
+        string memory name,
+        string memory symbol,
+        uint256 adminFee_,
+        address initilizer,
+        address[] memory shareHolders_,
+        uint256[] memory shareHolderShares_
+    ) ERC20(name, symbol) {
+        i_factory = msg.sender;
+        i_adminFee = adminFee_;
+        initilzied = false;
+        status = SaleStatus.CLOSED;
+        initilizeEquity(shareHolders_, shareHolderShares_);
+        transferOwnership(initilizer);
+    }
+&nbsp;
+    /* === RECIEVE FUNCTION === */
+&nbsp;
+    receive() external payable {}
+&nbsp;
+    /* === FALLBACK FUNCTION === */
+&nbsp;
+<span class="fstat-no" title="function not covered" >    fallback() external {}</span>
+&nbsp;
+    /* === EXTERNAL FUNCTIONS ===*/
+&nbsp;
+    /// @notice a dillution is a esentially a sale from all existing share holders at once. It maintains the pre-existing equity ratios
+    ///   between the intial shareholders.
+    function startDillutionSale(uint256 newShares, uint256 sharePrice_)
+        external
+        onlyOwner
+        nonReentrant
+    {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(initilzied == true, "Equity not initilized");
+        require(status == SaleStatus.CLOSED, "Sale has already started");
+        require(newShares &gt; 0, "Zero new shares set for sale");
+        require(sharePrice_ &gt; 0, "Undefined share price set");
+&nbsp;
+        ///updating status variables
+        dillutionSharePrice = sharePrice_;
+        totalShares = totalShares += newShares;
+        status = SaleStatus.OPEN;
+    }
+&nbsp;
+    /// @notice allows buyers to mint equity tokens, effectivly equally dilluting all existing shareholders.
+    function buyDillutionShares(uint256 quantity)
+        external
+        payable
+        nonReentrant
+    {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(status == SaleStatus.OPEN, "No active sale");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(
+            totalSupply() &lt; totalShares.add(quantity),
+            "Cannot buy more shares than available"
+        );
+        require(
+            initialEquity[msg.sender] == 0,
+            "Intital Shareholders cannot buy dillution shares"
+        );
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(
+            msg.value == (dillutionSharePrice.mul(quantity)).div(1 ether),
+            "Input value doesnt match share price"
+        );
+&nbsp;
+        ///calculates fee from sale and transfers to factory
+        uint256 fee = SafeMath.div(msg.value, i_adminFee);
+        payable(i_factory).transfer(fee);
+&nbsp;
+        ///minting tokens and adding minter to share holder array
+        _mint(msg.sender, quantity);
+        shareHolders.push(msg.sender);
+&nbsp;
+        ///updates status variables
+        update(false);
+&nbsp;
+        ///ends sale if there is no shares left to sell
+        if (totalSupply() &gt;= totalShares) {
+            endDillutionSale();
+        }
+    }
+&nbsp;
+    /// @notice a peer to peer sale is a sale from a single shareholder.
+    function startPeerToPeerSale(uint256 quantity, uint256 sharePrice_)
+        external
+        nonReentrant
+    {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(initilzied == true, "Equity not initlilized");
+        require(
+            peerToPeerSharesForSale[msg.sender] == 0,
+            "Seller already has sale started"
+        );
+        require(quantity &gt; 0, "Zero value quantity input");
+        require(sharePrice_ &gt; 0, "Zero value share price input");
+        require(
+            balanceOf(msg.sender) &gt;= quantity,
+            "User does not have enough shares to sell"
+        );
+&nbsp;
+        ///updates peer to peer variables for seller address
+        peerToPeerSharePrice[msg.sender] = sharePrice_;
+        peerToPeerSharesForSale[msg.sender] = quantity;
+&nbsp;
+        ///approves unlimited equity tokens to be moved by the contract. Trade off between ease of use and security.
+        approve(
+            address(this),
+            0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+        );
+    }
+&nbsp;
+    /// @notice motifies a seller's existing sale
+    function alterPeerToPeerSale(
+        address seller,
+        uint256 newQuantity,
+        uint256 newSharePrice_
+    ) external nonReentrant {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(initilzied == true, "Equity not initlilized");
+        require(msg.sender == seller, "Only the seller can motify their sale");
+        require(
+            peerToPeerSharesForSale[msg.sender] &gt; 0,
+            "Seller doesnt have a sale"
+        );
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(
+            balanceOf(msg.sender) &gt;= newQuantity,
+            "User does not have enough shares to sell"
+        );
+&nbsp;
+        if (newQuantity == 0) {
+            peerToPeerSharesForSale[msg.sender] = newQuantity;
+            endPeerToPeerSale(msg.sender);
+        } else {
+            peerToPeerSharePrice[msg.sender] = newSharePrice_;
+            peerToPeerSharesForSale[msg.sender] = newQuantity;
+        }
+    }
+&nbsp;
+    /// @notice allows buyer to purchase equity tokens from seller
+    function buyPeerToPeerShares(address seller, uint256 quantity)
+        external
+        payable
+        nonReentrant
+    {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(initilzied == true, "Equity not initilzied");
+        require(
+            peerToPeerSharesForSale[seller] &gt;= quantity,
+            "Inputed seller doesnt have enough shares listed"
+        );
+        require(
+            (peerToPeerSharePrice[seller].mul(quantity)).div(1 ether) ==
+                msg.value,
+            "Invaild msg value"
+        );
+&nbsp;
+        ///calculates fee from sale and transfers to factory
+        uint256 fee = SafeMath.div(msg.value, i_adminFee);
+        payable(i_factory).transfer(fee);
+&nbsp;
+        ///pays seller and tranfers tokens to buyer
+        payable(seller).transfer(SafeMath.sub(msg.value, fee));
+        _transfer(seller, msg.sender, quantity);
+&nbsp;
+        ///adds buyer to shareholder list
+        shareHolders.push(msg.sender);
+&nbsp;
+        ///updates status variables
+        update(false);
+        peerToPeerSharesForSale[seller] = peerToPeerSharesForSale[seller].sub(
+            quantity
+        );
+&nbsp;
+        if (peerToPeerSharesForSale[seller] == 0) {
+            endPeerToPeerSale(seller);
+        }
+    }
+&nbsp;
+    /* === INTERNAL FUNCTIONS === */
+&nbsp;
+    /// @notice updates the number of tokens shareholders own and their equity
+    function update(bool inital) internal {
+        for (uint256 i = 0; i &lt; shareHolders.length; i++) {
+            uint256 bal = balanceOf(shareHolders[i]);
+            if (bal &gt; 0) {
+                shareHolderShares[shareHolders[i]] = bal;
+                equity[shareHolders[i]] = (bal.mul(1 ether)).div(totalSupply());
+                if (inital == true) {
+                    initialEquity[shareHolders[i]] = (bal.mul(1 ether)).div(
+                        totalSupply()
+                    );
+                }
+            } else {
+                delete shareHolders[i];
+            }
+        }
+    }
+&nbsp;
+    /// @notice mints tokens according to pre-existing equity
+    function initilizeEquity(
+        address[] memory shareholders_,
+        uint256[] memory shareHolderShares_
+    ) internal nonReentrant {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(totalSupply() == 0, "Equity already initilzied");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(initilzied != true, "Equity already initilized");
+&nbsp;
+        uint256 totalShares_;
+&nbsp;
+        ///mints tokens for each shareholder
+        for (uint256 i = 0; i &lt; shareholders_.length; i++) {
+            _mint(shareholders_[i], shareHolderShares_[i]);
+            totalShares_ += shareHolderShares_[i];
+            shareHolders.push(shareholders_[i]);
+            initlalShareHolders.push(shareholders_[i]);
+        }
+&nbsp;
+        ///updates status variables
+        totalShares = totalShares_;
+        update(true);
+        initilzied = true;
+    }
+&nbsp;
+    /// @notice ends dillution sale and pays inital shareholders
+    function endDillutionSale() internal {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(status == SaleStatus.OPEN, "No current sale");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(initilzied == true, "Equity not initilized");
+        require(totalSupply() &gt;= totalShares, "Still supply left to be sold");
+&nbsp;
+        ///pays the initial shareholders according to there equity
+        for (uint256 i = 0; i &lt; initlalShareHolders.length; i++) {
+            uint256 amount = (initialEquity[initlalShareHolders[i]]).mul(
+                address(this).balance
+            );
+            uint256 pay = amount.div(1 ether);
+            payable(shareHolders[i]).transfer(pay);
+        }
+&nbsp;
+        //closes sale and updates variables
+        status = SaleStatus.CLOSED;
+        update(true);
+&nbsp;
+        ///updates inital holders for next dillution sale
+        initlalShareHolders = shareHolders;
+    }
+&nbsp;
+    function endPeerToPeerSale(address seller) internal {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(initilzied == true, "Equity not initilzied");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(
+            peerToPeerSharesForSale[seller] == 0,
+            "User has no active sale"
+        );
+&nbsp;
+        delete peerToPeerSharesForSale[seller];
+        delete peerToPeerSharePrice[seller];
+    }
+&nbsp;
+    /* === PUBLIC FUNCTIONS === */
+&nbsp;
+    function transfer(address to, uint256 amount)
+        public
+        virtual
+        override
+        returns (bool)
+    {
+        address owner = msg.sender;
+        _transfer(owner, to, amount);
+&nbsp;
+        shareHolders.push(to);
+        update(false);
+&nbsp;
+        return true;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function transferFrom(</span>
+        address from,
+        address to,
+        uint256 amount
+    ) public virtual override returns (bool) {
+<span class="cstat-no" title="statement not covered" >        address spender = msg.sender;</span>
+<span class="cstat-no" title="statement not covered" >        _spendAllowance(from, spender, amount)</span>;
+<span class="cstat-no" title="statement not covered" >        _transfer(from, to, amount)</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        shareHolders.push(to)</span>;
+<span class="cstat-no" title="statement not covered" >        update(false)</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+    }
+&nbsp;
+    /* === VIEW FUNCTIONS === */
+&nbsp;
+    function getContractStatus() public view returns (SaleStatus, bool) {
+        return (status, initilzied);
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Aug 18 2022 16:10:22 GMT-0400 (Eastern Daylight Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
