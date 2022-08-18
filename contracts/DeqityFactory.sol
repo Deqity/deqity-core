@@ -10,14 +10,14 @@ import "./TokenizedEquity.sol";
  */
 contract DeqityFactory {
     address public adminFeeSetter;
-    uint256 public adminFee;
+    uint16 public adminFee;
     address[] public equityContracts;
 
     mapping(string => mapping(string => address)) public getEquity;
 
     /* === CONSTRUCTOR ===*/
 
-    constructor(uint256 adminFee_) {
+    constructor(uint16 adminFee_) {
         adminFee = adminFee_;
         adminFeeSetter = msg.sender;
     }
@@ -77,7 +77,7 @@ contract DeqityFactory {
     }
 
     /// @notice sets fee for all depolyed contracts. Sale amounts are divied by admin fee. e.g. 200 = 0.5%
-    function setAdminFee(uint256 adminFee_) external {
+    function setAdminFee(uint16 adminFee_) external {
         require(
             msg.sender == adminFeeSetter,
             "Only fee setter can change admin fee"

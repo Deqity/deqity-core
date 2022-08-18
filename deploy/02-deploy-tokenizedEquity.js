@@ -14,20 +14,14 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         [ethers.utils.parseEther("30")],
     ]
 
-    await deploy("TokenizedEquity", {
-        from: deployer,
-        gasLimit: 30000000,
-        args: args,
-        log: true,
-        waitConfirmations: network.config.blockConfirmations || 1,
-    })
-
-    if (
-        !developmentChains.includes(network.name) &&
-        process.env.POLYGONSCAN_API_KEY
-    ) {
-        log("Verifying...")
-        await verify(tokenizedEquity.address, args)
+    if (developmentChains.includes(network.name)) {
+        await deploy("TokenizedEquity", {
+            from: deployer,
+            gasLimit: 30000000,
+            args: args,
+            log: true,
+            waitConfirmations: network.config.blockConfirmations || 1,
+        })
     }
 }
 

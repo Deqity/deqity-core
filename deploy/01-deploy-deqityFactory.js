@@ -1,16 +1,17 @@
 const { network, ethers } = require("hardhat")
 const { developmentChains, networkConfig } = require("../helper-hardhat-config")
+const { verify } = require("../utils/verify.js")
 
 module.exports = async function ({ getNamedAccounts, deployments }) {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
 
-    const args = [200]
+    const arguments = [200]
 
-    await deploy("DeqityFactory", {
+    const factory = await deploy("DeqityFactory", {
         from: deployer,
-        gasLimit: 30000000,
-        args: args,
+        gasLimit: 5000000,
+        args: arguments,
         log: true,
         waitConfirmations: network.config.blockConfirmations || 1,
     })
@@ -20,7 +21,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         process.env.POLYGONSCAN_API_KEY
     ) {
         log("Verifying...")
-        await verify(deqityFactory.address, args)
+        await verify(factory.address, arguments)
     }
 }
 

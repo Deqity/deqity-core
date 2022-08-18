@@ -21,7 +21,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     SaleStatus status;
 
     address public immutable i_factory;
-    uint256 public immutable i_adminFee;
+    uint16 public immutable i_adminFee;
     uint256 public totalShares;
     uint256 public dillutionSharePrice;
     bool public initilzied;
@@ -40,7 +40,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     constructor(
         string memory name,
         string memory symbol,
-        uint256 adminFee_,
+        uint16 adminFee_,
         address initilizer,
         address[] memory shareHolders_,
         uint256[] memory shareHolderShares_
@@ -71,6 +71,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         nonReentrant
     {
         require(initilzied == true, "Equity not initilized");
+
         require(status == SaleStatus.CLOSED, "Sale has already started");
         require(newShares > 0, "Zero new shares set for sale");
         require(sharePrice_ > 0, "Undefined share price set");

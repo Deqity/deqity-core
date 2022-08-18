@@ -8,7 +8,7 @@ contract ExposedTokenizedEquity is TokenizedEquity {
     constructor(
         string memory name,
         string memory symbol,
-        uint256 adminFee_,
+        uint16 adminFee_,
         address initilizer,
         address[] memory shareHolders_,
         uint256[] memory shareHolderShares_
