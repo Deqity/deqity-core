@@ -1,6 +1,6 @@
 # Deqity Core
 
-Deployments:
+### Deployments:
 
 ```
 Polygon Mumbai:
