@@ -5,3 +5,4 @@ artifacts
 cache
 gas-report.txt
 coverage.json
+coverage
