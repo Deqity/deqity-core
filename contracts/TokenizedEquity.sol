@@ -22,6 +22,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
     address public immutable i_factory;
     uint16 public immutable i_adminFee;
+    string public cid;
     uint256 public totalShares;
     uint256 public dillutionSharePrice;
     bool public initilzied;
@@ -40,6 +41,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     constructor(
         string memory name,
         string memory symbol,
+        string memory cid_,
         uint16 adminFee_,
         address initilizer,
         address[] memory shareHolders_,
@@ -47,6 +49,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     ) ERC20(name, symbol) {
         i_factory = msg.sender;
         i_adminFee = adminFee_;
+        cid = cid_;
         initilzied = false;
         status = SaleStatus.CLOSED;
         initilizeEquity(shareHolders_, shareHolderShares_);
@@ -326,5 +329,9 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
     function getContractStatus() public view returns (SaleStatus, bool) {
         return (status, initilzied);
+    }
+
+    function getIpfsCid() public view returns (string memory) {
+        return cid;
     }
 }

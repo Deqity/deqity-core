@@ -9,6 +9,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         const args = [
             "FakeCompanyLLC",
             "DEFCL",
+            "abc",
             200,
             deployer,
             [deployer],

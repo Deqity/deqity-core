@@ -26,7 +26,8 @@ describe("DeqityFactory", async function () {
                 factory.createEquity(
                     "Fake",
                     "DEFKE",
-                    [deployer, accounts[1], accounts[2]],
+                    "abc",
+                    [(deployer, accounts[1], accounts[2])],
                     [ethers.utils.parseEther("30")]
                 )
             ).to.be.revertedWith(
@@ -38,6 +39,7 @@ describe("DeqityFactory", async function () {
                 factory.createEquity(
                     "d",
                     "ddd",
+                    "abc",
                     [],
                     [ethers.utils.parseEther("30")]
                 )
@@ -53,6 +55,7 @@ describe("DeqityFactory", async function () {
                 factory.createEquity(
                     "",
                     "ddd",
+                    "abc",
                     [deployer],
                     [ethers.utils.parseEther("30")]
                 )
@@ -62,6 +65,7 @@ describe("DeqityFactory", async function () {
             await factory.createEquity(
                 "Fake",
                 "DEFKE",
+                "abc",
                 [deployer],
                 [ethers.utils.parseEther("30")]
             )
@@ -69,6 +73,7 @@ describe("DeqityFactory", async function () {
                 factory.createEquity(
                     "Fake",
                     "DEFKE",
+                    "abc",
                     [deployer],
                     [ethers.utils.parseEther("30")]
                 )
@@ -78,6 +83,7 @@ describe("DeqityFactory", async function () {
             await factory.createEquity(
                 "Fake",
                 "DEFKE",
+                "abc",
                 [deployer],
                 [ethers.utils.parseEther("30")]
             )
@@ -101,18 +107,21 @@ describe("DeqityFactory", async function () {
             await factory.createEquity(
                 "Fake Company LLC",
                 "DEFKE",
+                "abc",
                 [deployer],
                 [ethers.utils.parseEther("30")]
             )
             await factory.createEquity(
                 "Not Real Company Co",
                 "DENTR",
+                "abc",
                 [accounts[5].address, deployer],
                 [ethers.utils.parseEther("80"), ethers.utils.parseEther("20")]
             )
             await factory.createEquity(
                 "Imaginary Inc",
                 "DEIMAI",
+                "abc",
                 [accounts[5].address, accounts[6].address, accounts[7].address],
                 [
                     ethers.utils.parseEther("800"),
@@ -123,6 +132,7 @@ describe("DeqityFactory", async function () {
             await factory.createEquity(
                 "Unreal LLC",
                 "DEUNRL",
+                "abc",
                 [
                     deployer,
                     accounts[9].address,
@@ -139,6 +149,7 @@ describe("DeqityFactory", async function () {
             await factory.createEquity(
                 "Invalid Existance LLC",
                 "DEINVLD",
+                "abc",
                 [
                     deployer,
                     accounts[10].address,
@@ -212,6 +223,7 @@ describe("DeqityFactory", async function () {
             await factory.createEquity(
                 "Fake",
                 "DEFKE",
+                "abc",
                 [deployer],
                 [ethers.utils.parseEther("30")]
             )
@@ -261,6 +273,7 @@ describe("DeqityFactory", async function () {
             await factory.createEquity(
                 "Fake",
                 "DEFKE",
+                "abc",
                 [deployer],
                 [ethers.utils.parseEther("30")]
             )
@@ -275,6 +288,7 @@ describe("DeqityFactory", async function () {
             await factory.createEquity(
                 "Fake",
                 "DEFKE",
+                "abc",
                 [deployer],
                 [ethers.utils.parseEther("30")]
             )

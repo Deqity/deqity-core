@@ -36,6 +36,7 @@ contract DeqityFactory {
     function createEquity(
         string memory name,
         string memory symbol,
+        string memory cid,
         address[] memory shareHolders,
         uint256[] memory shareHolderShares
     ) external returns (address equity) {
@@ -66,6 +67,7 @@ contract DeqityFactory {
             new TokenizedEquity(
                 name,
                 symbol,
+                cid,
                 adminFee,
                 msg.sender,
                 shareHolders,
