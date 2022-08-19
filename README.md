@@ -5,5 +5,5 @@
 ```
 Polygon Mumbai:
 
-Factory: 0x1208e4937E7E18Cdd547c2fB70804CC038daF754
+Factory: 0x754dEfbbeca5655D4b25a06012B72344Ee4269FD
 ```

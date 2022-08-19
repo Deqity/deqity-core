@@ -29,6 +29,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
     address[] public initlalShareHolders;
     address[] public shareHolders;
+    address[] public peerSellers;
 
     mapping(address => uint256) public shareHolderShares;
     mapping(address => uint256) public equity;
@@ -142,6 +143,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         ///updates peer to peer variables for seller address
         peerToPeerSharePrice[msg.sender] = sharePrice_;
         peerToPeerSharesForSale[msg.sender] = quantity;
+        peerSellers.push(msg.sender);
 
         ///approves unlimited equity tokens to be moved by the contract. Trade off between ease of use and security.
         approve(
@@ -291,6 +293,12 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
         delete peerToPeerSharesForSale[seller];
         delete peerToPeerSharePrice[seller];
+
+        for (uint256 i = 0; i < peerSellers.length; i++) {
+            if (peerSellers[i] == msg.sender) {
+                delete peerSellers[i];
+            }
+        }
     }
 
     /* === PUBLIC FUNCTIONS === */
