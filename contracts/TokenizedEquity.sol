@@ -339,7 +339,11 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         return (status, initilzied);
     }
 
-    function getIpfsCid() public view returns (string memory) {
-        return cid;
+    function numOfShareHolders() public view returns (uint256) {
+        return shareHolders.length;
+    }
+
+    function numOfPeerToPeerSales() public view returns (uint256) {
+        return peerSellers.length;
     }
 }
