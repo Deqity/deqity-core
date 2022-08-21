@@ -78,7 +78,7 @@ This contract represents the equity of a buisness as erc-20 tokens. On deploymen
   ```
 The ```update``` function updates the variables that keep track of shareholders and their equity. Equity percentage is represented by ether. ```1 ether = 100%``` This method of representing percentages allows for an extreme amount of percison which is of upmost importance when working with ownership. 
 
-The contract maintains two lists of sharehodlers, ```initalShareHolders``` and ```shareHolders```. Inital shareholders are the shareholders that owned equity before a dillution sale. Every time ```update``` is called, the ```shareHolders``` list is updated. But the ```initalShareHolders``` only is updated when true ```updated``` is passed in ```updates``` perameter. This only occurs durring initlization via ```initilizeEquity``` or at the conclusion of a dilution sale via ```endDillutionSale```.
+The contract maintains two lists of sharehodlers, ```initalShareHolders``` and ```shareHolders```. Inital shareholders are the shareholders that owned equity before a dillution sale. Every time ```update``` is called, the shareholders list is updated. But the inital shareholders list is only updated when true is passed in ```update```'s perameter. This only occurs durring initlization via ```initilizeEquity``` or at the conclusion of a dilution sale via ```endDillutionSale```.
 
 ```solidity
  /// @notice updates the number of tokens shareholders own and their equity
