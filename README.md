@@ -27,7 +27,7 @@ Its primary purpose is to deploy contracts for each tokenized company. To do thi
 
 The frontend beutifally utilizes this design choice by using a query string containing the name and symbol of the contract. It then calls the function below to retrieve the address of the desired contract.
 
-```
+```solidity
 function getEquityAddress(string memory name, string memory symbol)
         public
         view
@@ -40,7 +40,7 @@ The secondary purpose of the factroy contract is to collect generated fees and t
 
 At any time, anyone can call the ```withdrawl``` function. Please note that this alway transfers the contract balance to the ```adminFeeSetter```, thus it doesnt matter who calls it. Im sure the fee setter would be very happy if someone else payed the gas fee to pay him. 
 
-```
+```solidity
 /// @notice transfers contract balance to the fee setter (doesnt matter who function caller is)
 function withdrawl() external {
      require(address(this).balance > 0, "No generated fees to withdraw");
