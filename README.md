@@ -49,3 +49,53 @@ function withdrawl() external {
 ```
 
 ## TokenizedEquity.sol
+This contract represents the equity of a buisness as erc-20 tokens. On deployment the contructor calls the ```initilizeEquity``` function along with setting many status varibles. This function mints inputed shares for each inputed shareholder. It then updates some status variables and calls the ```update``` function with its parameter as true. 
+
+```solidity
+ /// @notice mints tokens according to pre-existing equity
+    function initilizeEquity(
+        address[] memory shareholders_,
+        uint256[] memory shareHolderShares_
+    ) internal nonReentrant {
+        require(totalSupply() == 0, "Equity already initilzied");
+        require(initilzied != true, "Equity already initilized");
+
+        uint256 totalShares_;
+
+        ///mints tokens for each shareholder
+        for (uint256 i = 0; i < shareholders_.length; i++) {
+            _mint(shareholders_[i], shareHolderShares_[i]);
+            totalShares_ += shareHolderShares_[i];
+            shareHolders.push(shareholders_[i]);
+            initlalShareHolders.push(shareholders_[i]);
+        }
+
+        ///updates status variables
+        totalShares = totalShares_;
+        update(true);
+        initilzied = true;
+    }
+  ```
+The ```update``` function updates the variables that keep track of shareholders and their equity. Equity percentage is represented by ether. ```1 ether = 100%``` This method of representing percentages allows for an extreme amount of percison which is of upmost importance when working with ownership. 
+
+The contract maintains two lists of sharehodlers, ```initalShareHolders``` and ```shareHolders```. Inital shareholders are the shareholders that owned equity before a dillution sale. Every time ```update``` is called, the ```shareHolders``` list is updated. But the ```initalShareHolders``` only is updated when true ```updated``` is passed in ```updates``` perameter. This only occurs durring initlization via ```initilizeEquity``` or at the conclusion of a dilution sale via ```endDillutionSale```.
+
+```solidity
+ /// @notice updates the number of tokens shareholders own and their equity
+    function update(bool inital) internal {
+        for (uint256 i = 0; i < shareHolders.length; i++) {
+            uint256 bal = balanceOf(shareHolders[i]);
+            if (bal > 0) {
+                shareHolderShares[shareHolders[i]] = bal;
+                equity[shareHolders[i]] = (bal.mul(1 ether)).div(totalSupply());
+                if (inital == true) {
+                    initialEquity[shareHolders[i]] = (bal.mul(1 ether)).div(
+                        totalSupply()
+                    );
+                }
+            } else {
+                delete shareHolders[i];
+            }
+        }
+    }
+    ```
