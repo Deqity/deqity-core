@@ -13,17 +13,16 @@ Deployed Equities for Tests:
 2. 0xe87E87d0f2784f59869598F2b9f8A6CDA3B5b453
 ```
 
-### Test
+## Test
 
 ```
 yarn hardhat test
 ```
 
-## Contracts
+# Contracts
 Deqity consists of two contracts to preform all neccary actions. The contracts could be more gas optimized but they are completly functional and tested. Exposed Tokenized Equity is a contract for testing internal functions only.
 
-### DeqityFactory.sol
+## DeqityFactory.sol
 Its main purpose is to deploy contracts for each tokenized company. Every time that the createEquity function is called a new equity contract is deployed. 
 
-
-### TokenizedEquity.sol
+## TokenizedEquity.sol
