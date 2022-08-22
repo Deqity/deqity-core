@@ -49,7 +49,7 @@ function withdrawl() external {
 ```
 
 ## TokenizedEquity.sol
-This contract represents the equity of a business as erc-20 tokens. On deployment, the constructor calls the ```initilizeEquity``` function along with setting many status variables. This function mints inputed shares for each inputed shareholder. It then updates some status variables, transfers ownership to the caller, and calls the ```update``` function with its parameter as true. 
+This contract represents the equity of a business as erc-20 tokens. On deployment, the constructor calls the ```initilizeEquity``` function along with setting many status variables. This function mints inputed shares for each inputed shareholder. It then updates status variables, transfers ownership to the caller, and calls the ```update``` function with its parameter as true. 
 
 ```solidity
  /// @notice mints tokens according to pre-existing equity
