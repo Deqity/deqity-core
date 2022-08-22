@@ -20,7 +20,7 @@ yarn hardhat test
 ```
 
 # Contracts
-Deqity consists of two contracts to perform all necessary  actions. The contracts could be more gas optimized but are completely functional and tested. Exposed Tokenized Equity is a contract for testing internal functions only.
+Deqity consists of two contracts to perform all necessary actions. The third contract, Exposed Tokenized Equity is a contract for testing internal functions only.
 
 ## DeqityFactory.sol
 Its primary purpose is to deploy contracts for each tokenized company. To do this, the  ```createEquity```  function is called. After every new contract is deployed, the factory stores the address, name, and symbol of the company. For organizational and search purposes, no two equity contracts can have the same name and symbol. This allows each contract to have a unique identifier. 
