@@ -76,6 +76,7 @@ This contract represents the equity of a buisness as erc-20 tokens. On deploymen
         initilzied = true;
     }
   ```
+  
 The ```update``` function updates the variables that keep track of shareholders and their equity. Equity percentage is represented by ether. ```1 ether = 100%``` This method of representing percentages allows for an extreme amount of percison which is of upmost importance when working with ownership. 
 
 The contract maintains two lists of sharehodlers, ```initalShareHolders``` and ```shareHolders```. Inital shareholders are the shareholders that owned equity before a dillution sale. Every time ```update``` is called, the shareholders list is updated. But the inital shareholders list is only updated when true is passed in ```update```'s perameter. This only occurs durring initlization via ```initilizeEquity``` or at the conclusion of a dilution sale via ```endDillutionSale```.
@@ -99,13 +100,14 @@ The contract maintains two lists of sharehodlers, ```initalShareHolders``` and `
         }
     }
 ```
+
 The contract allows for two methods of selling shares. The first method is called a dilution sale. This type of sale effectivly dilutes all the shareholder's equities equally. A company may choese to do this if they want to maintain the equity ratios amoung the current sharholders and a sigle sharholder does not want to directly sell their equity. 
 
 To start the dilution sale, the owner of the contract specifies a new amount of total shares. And then inputs that amount into the ```startDillutionSale``` function along with a price per share. The function updates status variables and then allows buyers to buy shares. Note, inital shareholders cannot purchase dilution shares to prevent them from getting (essentially) free equity.
 
 After the dilution sale is started, a buyer can call the ```startPeerToPeerSale``` and input and certain quantity of shares. The contract then mints the inputed quantity of shares for the buyer as long as that quantity does not surpass the new total amount of shares. The ```msg.value``` (minus fee) of their puchase is kept in the equity contract. If their purchase raises the ```totalSupply``` to the ```totalShares``` then the ```endDillutionSale``` function will be called to end the dilution sale.
 
-At the end of a dilution sale, each inital shareholder will be paid a percantage of the equity contract's balance. This percentage is determined by ```initalEquity``` which is only caluclated at initalization and at the end of a dillution sale.
+At the end of a dilution sale, each inital shareholder will be paid a percantage of the equity contract's balance. This percentage is determined by ```initalEquity``` which is only caluclated at initalization and at the end of a dilution sale along with ```initialShareHolders```.
 
 ```solidity 
  /// @notice ends dillution sale and pays inital shareholders
@@ -131,3 +133,9 @@ At the end of a dilution sale, each inital shareholder will be paid a percantage
         initlalShareHolders = shareHolders;
     }
 ```
+
+The second method of selling shares is via a "peer to peer sale". Which is ecentally a single seller to single buyer. Note, there can be muliple buyers if the previous buyer does not buy the entire sale quantity. Any shareholder can start on of these sales by calling ```startPeerToPeerSale``` and inputing a qunatity of share and a price per share. The contract approves an "unlimited" amount of equity shares for the equity contract for a better user experience alothough it's a tradeoff with security.
+
+After "peer to peer sales" are created, the contract maintains a list of "peer to peer sellers" and mappings of their corresponding data of their sale i.e. quantity and price. To buy from a seller, the buyer has to call ```buyPeerToPeerShares``` and imput the seller's address along with a quantity of shares. The ```msg.value``` (minus fee) is then transfered to the seller and the quantity of shares are transfered to the buyer. After the sale, the sale's status variables are updated and similarly to the dillution sale, if the sales quantity is reached then the sale will be ended via ```endPeerToPeerSale```.
+
+Finally there is a function to motifiy a user's sale. This can be called if they want to change the quantity being sold, the price, or if they want to stop the sale entirely. To do this, the seller calls ```alterPeerToPeerSale``` and inputs their address, a quantity, and a price. Note, only the seller can motifiy their sale. If the new quantity is equal to zero then ```endPeerToPeerSale``` will be called and the sale will be ended.
