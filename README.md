@@ -38,7 +38,7 @@ function getEquityAddress(string memory name, string memory symbol)
 ```
 The secondary purpose of the factroy contract is to collect generated fees and transfer them to ```adminFeeSetter```, aka the contract owner. When the factory is deployed it is set with an ```adminFee```. This admin fee can be only altered by the ```adminFeeSetter```. When an equity contract is deployed this admin fee is passed to the new contract. The ```msg.value``` of every share sale is divided by the ```adminFee``` to create a ```fee```. This fee is then transfered to the factory. 
 
-At any time, anyone can call the ```withdrawl``` function. Please note that this alway transfers the contract balance to the ```adminFeeSetter```, thus it doesnt matter who calls it. Im sure the fee setter would be very happy if someone else payed the gas fee to pay him. 
+At any time, anyone can call the ```withdrawl``` function. Please note that this always transfers the contract balance to the ```adminFeeSetter```, thus it doesnt matter who calls it. I'm sure the fee setter would be very happy if someone else payed the gas fee to pay him. 
 
 ```solidity
 /// @notice transfers contract balance to the fee setter (doesnt matter who function caller is)
@@ -49,7 +49,7 @@ function withdrawl() external {
 ```
 
 ## TokenizedEquity.sol
-This contract represents the equity of a buisness as erc-20 tokens. On deployment the contructor calls the ```initilizeEquity``` function along with setting many status varibles. This function mints inputed shares for each inputed shareholder. It then updates some status variables and calls the ```update``` function with its parameter as true. 
+This contract represents the equity of a buisness as erc-20 tokens. On deployment the contructor calls the ```initilizeEquity``` function along with setting many status varibles. This function mints inputed shares for each inputed shareholder. It then updates some status variables, transfers ownership to the caller, and calls the ```update``` function with its parameter as true. 
 
 ```solidity
  /// @notice mints tokens according to pre-existing equity
@@ -98,4 +98,36 @@ The contract maintains two lists of sharehodlers, ```initalShareHolders``` and `
             }
         }
     }
-    ```
+```
+The contract allows for two methods of selling shares. The first method is called a dilution sale. This type of sale effectivly dilutes all the shareholder's equities equally. A company may choese to do this if they want to maintain the equity ratios amoung the current sharholders and a sigle sharholder does not want to directly sell their equity. 
+
+To start the dilution sale, the owner of the contract specifies a new amount of total shares. And then inputs that amount into the ```startDillutionSale``` function along with a price per share. The function updates status variables and then allows buyers to buy shares. Note, inital shareholders cannot purchase dilution shares to prevent them from getting (essentially) free equity.
+
+After the dilution sale is started, a buyer can call the ```startPeerToPeerSale``` and input and certain quantity of shares. The contract then mints the inputed quantity of shares for the buyer as long as that quantity does not surpass the new total amount of shares. The ```msg.value``` (minus fee) of their puchase is kept in the equity contract. If their purchase raises the ```totalSupply``` to the ```totalShares``` then the ```endDillutionSale``` function will be called to end the dilution sale.
+
+At the end of a dilution sale, each inital shareholder will be paid a percantage of the equity contract's balance. This percentage is determined by ```initalEquity``` which is only caluclated at initalization and at the end of a dillution sale.
+
+```solidity 
+ /// @notice ends dillution sale and pays inital shareholders
+    function endDillutionSale() internal {
+        require(status == SaleStatus.OPEN, "No current sale");
+        require(initilzied == true, "Equity not initilized");
+        require(totalSupply() >= totalShares, "Still supply left to be sold");
+
+        ///pays the initial shareholders according to there equity
+        for (uint256 i = 0; i < initlalShareHolders.length; i++) {
+            uint256 amount = (initialEquity[initlalShareHolders[i]]).mul(
+                address(this).balance
+            );
+            uint256 pay = amount.div(1 ether);
+            payable(shareHolders[i]).transfer(pay);
+        }
+
+        //closes sale and updates variables
+        status = SaleStatus.CLOSED;
+        update(true);
+
+        ///updates inital holders for next dillution sale
+        initlalShareHolders = shareHolders;
+    }
+```
