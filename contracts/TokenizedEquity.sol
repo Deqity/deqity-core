@@ -20,6 +20,19 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     }
     SaleStatus status;
 
+    struct Shareholder {
+        address holder;
+        uint256 shares;
+        uint256 equity;
+        uint256 initialEquity;
+    }
+
+    struct PrivateSale {
+        address seller;
+        uint256 sharePrice;
+        uint256 sharesForSale;
+    }
+
     address public immutable i_factory;
     uint16 public immutable i_adminFee;
     string public cid;
@@ -31,11 +44,8 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     address[] public shareHolders;
     address[] public peerSellers;
 
-    mapping(address => uint256) public shareHolderShares;
-    mapping(address => uint256) public equity;
-    mapping(address => uint256) public initialEquity;
-    mapping(address => uint256) public peerToPeerSharePrice;
-    mapping(address => uint256) public peerToPeerSharesForSale;
+    mapping(address => Shareholder) public shareholdersInfo;
+    mapping(address => PrivateSale) public privateSales;
 
     /* === CONSTRUCTOR ===*/
 
@@ -72,7 +82,6 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     function startDillutionSale(uint256 newShares, uint256 sharePrice_)
         external
         onlyOwner
-        nonReentrant
     {
         require(initilzied == true, "Equity not initilized");
 
@@ -98,7 +107,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
             "Cannot buy more shares than available"
         );
         require(
-            initialEquity[msg.sender] == 0,
+            shareholdersInfo[msg.sender].initialEquity == 0,
             "Intital Shareholders cannot buy dillution shares"
         );
         require(
@@ -130,7 +139,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     {
         require(initilzied == true, "Equity not initlilized");
         require(
-            peerToPeerSharesForSale[msg.sender] == 0,
+            privateSales[msg.sender].sharesForSale == 0,
             "Seller already has sale started"
         );
         require(quantity > 0, "Zero value quantity input");
@@ -141,8 +150,11 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         );
 
         ///updates peer to peer variables for seller address
-        peerToPeerSharePrice[msg.sender] = sharePrice_;
-        peerToPeerSharesForSale[msg.sender] = quantity;
+        privateSales[msg.sender] = PrivateSale(
+            msg.sender,
+            sharePrice_,
+            quantity
+        );
         peerSellers.push(msg.sender);
 
         ///approves unlimited equity tokens to be moved by the contract. Trade off between ease of use and security.
@@ -157,11 +169,11 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         address seller,
         uint256 newQuantity,
         uint256 newSharePrice_
-    ) external nonReentrant {
+    ) external {
         require(initilzied == true, "Equity not initlilized");
         require(msg.sender == seller, "Only the seller can motify their sale");
         require(
-            peerToPeerSharesForSale[msg.sender] > 0,
+            privateSales[msg.sender].sharesForSale > 0,
             "Seller doesnt have a sale"
         );
         require(
@@ -170,11 +182,14 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         );
 
         if (newQuantity == 0) {
-            peerToPeerSharesForSale[msg.sender] = newQuantity;
+            privateSales[msg.sender].sharesForSale = newQuantity;
             endPeerToPeerSale(msg.sender);
         } else {
-            peerToPeerSharePrice[msg.sender] = newSharePrice_;
-            peerToPeerSharesForSale[msg.sender] = newQuantity;
+            privateSales[msg.sender] = PrivateSale(
+                msg.sender,
+                newSharePrice_,
+                newQuantity
+            );
         }
     }
 
@@ -186,11 +201,11 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     {
         require(initilzied == true, "Equity not initilzied");
         require(
-            peerToPeerSharesForSale[seller] >= quantity,
+            privateSales[seller].sharesForSale >= quantity,
             "Inputed seller doesnt have enough shares listed"
         );
         require(
-            (peerToPeerSharePrice[seller].mul(quantity)).div(1 ether) ==
+            (privateSales[seller].sharePrice.mul(quantity)).div(1 ether) ==
                 msg.value,
             "Invaild msg value"
         );
@@ -208,11 +223,11 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
         ///updates status variables
         update(false);
-        peerToPeerSharesForSale[seller] = peerToPeerSharesForSale[seller].sub(
-            quantity
-        );
+        privateSales[seller].sharesForSale = privateSales[seller]
+            .sharesForSale
+            .sub(quantity);
 
-        if (peerToPeerSharesForSale[seller] == 0) {
+        if (privateSales[seller].sharesForSale == 0) {
             endPeerToPeerSale(seller);
         }
     }
@@ -224,12 +239,16 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         for (uint256 i = 0; i < shareHolders.length; i++) {
             uint256 bal = balanceOf(shareHolders[i]);
             if (bal > 0) {
-                shareHolderShares[shareHolders[i]] = bal;
-                equity[shareHolders[i]] = (bal.mul(1 ether)).div(totalSupply());
+                shareholdersInfo[shareHolders[i]] = Shareholder(
+                    shareHolders[i],
+                    bal,
+                    (bal.mul(1 ether)).div(totalSupply()),
+                    0
+                );
                 if (inital == true) {
-                    initialEquity[shareHolders[i]] = (bal.mul(1 ether)).div(
-                        totalSupply()
-                    );
+                    shareholdersInfo[shareHolders[i]].initialEquity = (
+                        bal.mul(1 ether)
+                    ).div(totalSupply());
                 }
             } else {
                 delete shareHolders[i];
@@ -262,16 +281,16 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     }
 
     /// @notice ends dillution sale and pays inital shareholders
-    function endDillutionSale() internal {
+    function endDillutionSale() internal nonReentrant {
         require(status == SaleStatus.OPEN, "No current sale");
         require(initilzied == true, "Equity not initilized");
         require(totalSupply() >= totalShares, "Still supply left to be sold");
 
         ///pays the initial shareholders according to there equity
         for (uint256 i = 0; i < initlalShareHolders.length; i++) {
-            uint256 amount = (initialEquity[initlalShareHolders[i]]).mul(
-                address(this).balance
-            );
+            uint256 amount = (
+                shareholdersInfo[initlalShareHolders[i]].initialEquity
+            ).mul(address(this).balance);
             uint256 pay = amount.div(1 ether);
             payable(shareHolders[i]).transfer(pay);
         }
@@ -287,12 +306,11 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     function endPeerToPeerSale(address seller) internal {
         require(initilzied == true, "Equity not initilzied");
         require(
-            peerToPeerSharesForSale[seller] == 0,
-            "User has no active sale"
+            privateSales[seller].sharesForSale == 0,
+            "User has an active sale"
         );
 
-        delete peerToPeerSharesForSale[seller];
-        delete peerToPeerSharePrice[seller];
+        delete privateSales[seller];
 
         for (uint256 i = 0; i < peerSellers.length; i++) {
             if (peerSellers[i] == msg.sender) {
