@@ -22,6 +22,16 @@ contract DeqityFactory {
         adminFeeSetter = msg.sender;
     }
 
+    /* === EVENTS === */
+
+    event EquityTokenized(
+        string name,
+        string symbol,
+        string cid,
+        address[] shareholders,
+        uint256[] shares
+    );
+
     /* === RECEIVE FUNCTION === */
 
     receive() external payable {}
@@ -76,6 +86,14 @@ contract DeqityFactory {
         );
         equityContracts.push(equity);
         getEquity[name][symbol] = equity;
+
+        emit EquityTokenized(
+            name,
+            symbol,
+            cid,
+            shareHolders,
+            shareHolderShares
+        );
     }
 
     /// @notice sets fee for all depolyed contracts. Sale amounts are divied by admin fee. e.g. 200 = 0.5%
