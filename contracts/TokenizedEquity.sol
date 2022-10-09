@@ -94,6 +94,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         totalShares = totalShares += newShares;
         status = SaleStatus.OPEN;
 
+        update(true);
         initlalShareHolders = shareHolders;
     }
 
@@ -292,11 +293,13 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         require(initilzied == true, "Equity not initilized");
         require(totalSupply() >= totalShares, "Still supply left to be sold");
 
+        uint256 contractBal = address(this).balance;
+
         ///pays the initial shareholders according to their equity
         for (uint256 i = 0; i < initlalShareHolders.length; i++) {
             uint256 amount = (
                 shareholdersInfo[initlalShareHolders[i]].initialEquity
-            ).mul(address(this).balance);
+            ).mul(contractBal);
             uint256 pay = amount.div(1 ether);
             payable(initlalShareHolders[i]).transfer(pay);
         }

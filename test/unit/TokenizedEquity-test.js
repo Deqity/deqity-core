@@ -558,14 +558,17 @@ describe("TokenizedEquity", async function () {
             const status = await exposed.getContractStatus()
             const holder = await exposed.initlalShareHolders(2)
 
-            console.log(hlderPostBal.sub(hlderPreBal).toString())
-
             //fee is sent to deplyer since he is acting as factory
             assert.equal(
                 depPostBal.sub(depPreBal).toString(),
                 depEq
-                    .mul(ethers.utils.parseEther("50"))
+                    .mul(
+                        ethers.utils
+                            .parseEther("50")
+                            .sub(ethers.utils.parseEther("50").div(200))
+                    )
                     .div(ethers.utils.parseEther("1"))
+                    .add(ethers.utils.parseEther("0.25"))
                     .toString()
             )
             assert.equal(
