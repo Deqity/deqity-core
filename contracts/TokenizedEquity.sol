@@ -343,9 +343,8 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
         if (status == SaleStatus.CLOSED) {
             initlalShareHolders.push(to);
-        } else {
-            update(false);
         }
+        update(false);
 
         return true;
     }
@@ -363,9 +362,8 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
         if (status == SaleStatus.CLOSED) {
             initlalShareHolders.push(to);
-        } else {
-            update(false);
         }
+        update(false);
 
         return true;
     }
