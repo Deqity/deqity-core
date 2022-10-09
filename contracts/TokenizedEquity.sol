@@ -381,4 +381,12 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     function numOfPeerToPeerSales() public view returns (uint256) {
         return peerSellers.length;
     }
+
+    function getHolderData()
+        public
+        view
+        returns (address[] memory, address[] memory)
+    {
+        return (shareHolders, peerSellers);
+    }
 }
