@@ -93,6 +93,8 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         dillutionSharePrice = sharePrice_;
         totalShares = totalShares += newShares;
         status = SaleStatus.OPEN;
+
+        initlalShareHolders = shareHolders;
     }
 
     /// @notice allows buyers to mint equity tokens, effectivly equally dilluting all existing shareholders.
@@ -239,16 +241,20 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         for (uint256 i = 0; i < shareHolders.length; i++) {
             uint256 bal = balanceOf(shareHolders[i]);
             if (bal > 0) {
-                shareholdersInfo[shareHolders[i]] = Shareholder(
-                    shareHolders[i],
-                    bal,
-                    (bal.mul(1 ether)).div(totalSupply()),
-                    0
-                );
                 if (inital == true) {
-                    shareholdersInfo[shareHolders[i]].initialEquity = (
-                        bal.mul(1 ether)
-                    ).div(totalSupply());
+                    shareholdersInfo[shareHolders[i]] = Shareholder(
+                        shareHolders[i],
+                        bal,
+                        (bal.mul(1 ether)).div(totalSupply()),
+                        (bal.mul(1 ether)).div(totalSupply())
+                    );
+                } else {
+                    shareholdersInfo[shareHolders[i]] = Shareholder(
+                        shareHolders[i],
+                        bal,
+                        (bal.mul(1 ether)).div(totalSupply()),
+                        shareholdersInfo[shareHolders[i]].initialEquity
+                    );
                 }
             } else {
                 delete shareHolders[i];
@@ -281,18 +287,18 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     }
 
     /// @notice ends dillution sale and pays inital shareholders
-    function endDillutionSale() internal nonReentrant {
+    function endDillutionSale() internal {
         require(status == SaleStatus.OPEN, "No current sale");
         require(initilzied == true, "Equity not initilized");
         require(totalSupply() >= totalShares, "Still supply left to be sold");
 
-        ///pays the initial shareholders according to there equity
+        ///pays the initial shareholders according to their equity
         for (uint256 i = 0; i < initlalShareHolders.length; i++) {
             uint256 amount = (
                 shareholdersInfo[initlalShareHolders[i]].initialEquity
             ).mul(address(this).balance);
             uint256 pay = amount.div(1 ether);
-            payable(shareHolders[i]).transfer(pay);
+            payable(initlalShareHolders[i]).transfer(pay);
         }
 
         //closes sale and updates variables
@@ -331,7 +337,12 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         _transfer(owner, to, amount);
 
         shareHolders.push(to);
-        update(false);
+
+        if (status == SaleStatus.CLOSED) {
+            initlalShareHolders.push(to);
+        } else {
+            update(false);
+        }
 
         return true;
     }
@@ -346,7 +357,12 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         _transfer(from, to, amount);
 
         shareHolders.push(to);
-        update(false);
+
+        if (status == SaleStatus.CLOSED) {
+            initlalShareHolders.push(to);
+        } else {
+            update(false);
+        }
 
         return true;
     }

@@ -20,8 +20,11 @@ describe("TokenizedEquity", async function () {
             assert.equal(factory, deployer)
         })
         it("calls initalizeEquity", async function () {
-            const userShares = await equity.shareHolderShares(deployer)
-            assert.equal(userShares.toString(), ethers.utils.parseEther("30"))
+            const userShares = await equity.shareholdersInfo(deployer)
+            assert.equal(
+                userShares.shares.toString(),
+                ethers.utils.parseEther("30")
+            )
         })
         it("transfers ownership to initlizer", async function () {
             const owner = await equity.owner()
@@ -134,10 +137,11 @@ describe("TokenizedEquity", async function () {
             const bal = await equity.balanceOf(accounts[1].address)
             const address = await equity.shareHolders(1)
             const depPostBal = await accounts[0].getBalance()
-            const shrHlderShrs = await equity.shareHolderShares(
-                accounts[1].address
-            )
-            const usrEquity = await equity.equity(accounts[1].address)
+
+            const usr = await equity.shareholdersInfo(accounts[1].address)
+            const shrHlderShrs = usr.shares
+            const usrEquity = usr.equity
+
             const totalSupply = await equity.totalSupply()
 
             assert.equal(
@@ -220,9 +224,12 @@ describe("TokenizedEquity", async function () {
                 ethers.utils.parseEther("10"),
                 ethers.utils.parseEther("1")
             )
-            const sharePrice = await equity.peerToPeerSharePrice(deployer)
-            const shares = await equity.peerToPeerSharesForSale(deployer)
+
+            const sale = await equity.privateSales(deployer)
+            const sharePrice = sale.sharePrice
+            const shares = sale.sharesForSale
             const approved = await equity.allowance(deployer, equity.address)
+
             assert.equal(sharePrice.toString(), ethers.utils.parseEther("1"))
             assert.equal(shares.toString(), ethers.utils.parseEther("10"))
             assert.equal(approved.toString(), 2 ** 256 - 1)
@@ -275,8 +282,9 @@ describe("TokenizedEquity", async function () {
                 ethers.utils.parseEther("1")
             )
 
-            const sharePrice = await equity.peerToPeerSharePrice(deployer)
-            const shares = await equity.peerToPeerSharesForSale(deployer)
+            const sale = await equity.privateSales(deployer)
+            const sharePrice = sale.sharePrice
+            const shares = sale.sharesForSale
 
             assert.equal(sharePrice.toString(), 0)
             assert.equal(shares.toString(), 0)
@@ -292,8 +300,9 @@ describe("TokenizedEquity", async function () {
                 ethers.utils.parseEther("2")
             )
 
-            const sharePrice = await equity.peerToPeerSharePrice(deployer)
-            const shares = await equity.peerToPeerSharesForSale(deployer)
+            const sale = await equity.privateSales(deployer)
+            const sharePrice = sale.sharePrice
+            const shares = sale.sharesForSale
 
             assert.equal(sharePrice.toString(), ethers.utils.parseEther("2"))
             assert.equal(shares.toString(), ethers.utils.parseEther("5"))
@@ -368,11 +377,11 @@ describe("TokenizedEquity", async function () {
             )
             const holder1 = await equity.shareHolders(1)
             const holder2 = await equity.shareHolders(2)
-            const remainingSharesSaleDep = await equity.peerToPeerSharesForSale(
-                accounts[0].address
-            )
-            const remainingSharesSaleAcc1 =
-                await equity.peerToPeerSharesForSale(accounts[1].address)
+
+            const sale = await equity.privateSales(deployer)
+            const remainingSharesSaleDep = sale.sharesForSale
+            const sale1 = await equity.privateSales(accounts[1].address)
+            const remainingSharesSaleAcc1 = sale1.sharesForSale
 
             assert.equal(
                 depPostBal.sub(depPreBal).toString(),
@@ -420,11 +429,12 @@ describe("TokenizedEquity", async function () {
             await exposed._update(true)
 
             const depShareHolder = await exposed.shareHolders(0)
-            const shares = await exposed.shareHolderShares(accounts[1].address)
+            const holder = await exposed.shareholdersInfo(accounts[1].address)
+            const shares = holder.shares
             const bal = await exposed.balanceOf(accounts[1].address)
             const contractBal = await exposed.totalSupply()
-            const equity = await exposed.equity(accounts[1].address)
-            const initEquity = await exposed.initialEquity(accounts[1].address)
+            const equity = holder.equity
+            const initEquity = holder.initialEquity
 
             assert.equal(depShareHolder, 0)
             assert.equal(shares.toString(), bal.toString())
@@ -528,9 +538,14 @@ describe("TokenizedEquity", async function () {
             )
 
             const depPreBal = await accounts[0].getBalance()
-            const depEq = await exposed.initialEquity(deployer)
+            const holderInfo = await exposed.shareholdersInfo(deployer)
+            const depEq = holderInfo.initialEquity
+
             const hlderPreBal = await accounts[6].getBalance()
-            const hlderEq = await exposed.initialEquity(accounts[6].address)
+            const holderInfo1 = await exposed.shareholdersInfo(
+                accounts[6].address
+            )
+            const hlderEq = holderInfo1.initialEquity
 
             exposed = await exposed.connect(accounts[1])
             await exposed.buyDillutionShares(ethers.utils.parseEther("5"), {
@@ -539,8 +554,11 @@ describe("TokenizedEquity", async function () {
 
             const depPostBal = await accounts[0].getBalance()
             const hlderPostBal = await accounts[6].getBalance()
+
             const status = await exposed.getContractStatus()
             const holder = await exposed.initlalShareHolders(2)
+
+            console.log(hlderPostBal.sub(hlderPreBal).toString())
 
             //fee is sent to deplyer since he is acting as factory
             assert.equal(
@@ -595,13 +613,12 @@ describe("TokenizedEquity", async function () {
                 }
             )
 
-            const shares = await equity.peerToPeerSharesForSale(
-                accounts[0].address
-            )
-            const price = await equity.peerToPeerSharePrice(accounts[0].address)
+            const sale = await equity.privateSales(accounts[0].address)
 
-            assert.equal(shares, 0)
-            assert.equal(price, 0)
+            assert.equal(
+                sale.seller,
+                "0x0000000000000000000000000000000000000000"
+            )
         })
     })
 })
