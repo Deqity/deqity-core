@@ -67,6 +67,19 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         transferOwnership(initilizer);
     }
 
+    /* === EVENTS === */
+
+    event NewSeller(address seller, uint256 shares, uint256 sharePrice);
+
+    event SharesSold(
+        address seller,
+        address buyer,
+        uint256 shares,
+        uint256 sharePrice
+    );
+
+    event SaleFinished(address seller);
+
     /* === RECIEVE FUNCTION === */
 
     receive() external payable {}
@@ -165,6 +178,8 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
             address(this),
             0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
         );
+
+        emit NewSeller(msg.sender, quantity, sharePrice_);
     }
 
     /// @notice motifies a seller's existing sale
@@ -202,14 +217,14 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         payable
         nonReentrant
     {
+        PrivateSale memory sale = privateSales[seller];
         require(initilzied == true, "Equity not initilzied");
         require(
-            privateSales[seller].sharesForSale >= quantity,
+            sale.sharesForSale >= quantity,
             "Inputed seller doesnt have enough shares listed"
         );
         require(
-            (privateSales[seller].sharePrice.mul(quantity)).div(1 ether) ==
-                msg.value,
+            (sale.sharePrice.mul(quantity)).div(1 ether) == msg.value,
             "Invaild msg value"
         );
 
@@ -226,10 +241,11 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
         ///updates status variables
         update(false);
-        privateSales[seller].sharesForSale = privateSales[seller]
-            .sharesForSale
-            .sub(quantity);
+        privateSales[seller].sharesForSale = sale.sharesForSale.sub(quantity);
 
+        emit SharesSold(seller, msg.sender, quantity, sale.sharePrice);
+
+        ///Ends private sale if there is no shares left
         if (privateSales[seller].sharesForSale == 0) {
             endPeerToPeerSale(seller);
         }
@@ -326,6 +342,8 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
                 delete peerSellers[i];
             }
         }
+
+        emit SaleFinished(seller);
     }
 
     /* === PUBLIC FUNCTIONS === */
