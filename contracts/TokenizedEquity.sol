@@ -75,10 +75,17 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         address seller,
         address buyer,
         uint256 shares,
-        uint256 sharePrice
+        uint256 sharePrice,
+        bool dillution
     );
 
-    event SaleFinished(address seller);
+    event SaleFinished(address seller, bool dillution);
+
+    event NewDillution(
+        address newShares,
+        uint256 sharePrice,
+        uint256 newTotalShares
+    );
 
     /* === RECIEVE FUNCTION === */
 
@@ -243,7 +250,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
         update(false);
         privateSales[seller].sharesForSale = sale.sharesForSale.sub(quantity);
 
-        emit SharesSold(seller, msg.sender, quantity, sale.sharePrice);
+        emit SharesSold(seller, msg.sender, quantity, sale.sharePrice, false);
 
         ///Ends private sale if there is no shares left
         if (privateSales[seller].sharesForSale == 0) {
@@ -343,7 +350,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
             }
         }
 
-        emit SaleFinished(seller);
+        emit SaleFinished(seller, false);
     }
 
     /* === PUBLIC FUNCTIONS === */
