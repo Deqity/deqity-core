@@ -82,7 +82,7 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
     event SaleFinished(address seller, bool dillution);
 
     event NewDillution(
-        address newShares,
+        uint256 newShares,
         uint256 sharePrice,
         uint256 newTotalShares
     );
@@ -116,6 +116,8 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
         update(true);
         initlalShareHolders = shareHolders;
+
+        emit NewDillution(newShares, sharePrice_, totalShares);
     }
 
     /// @notice allows buyers to mint equity tokens, effectivly equally dilluting all existing shareholders.
@@ -148,6 +150,14 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
         ///updates status variables
         update(false);
+
+        emit SharesSold(
+            address(this),
+            msg.sender,
+            quantity,
+            dillutionSharePrice,
+            true
+        );
 
         ///ends sale if there is no shares left to sell
         if (totalSupply() >= totalShares) {
@@ -216,6 +226,8 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
                 newQuantity
             );
         }
+
+        emit NewSeller(msg.sender, newQuantity, newSharePrice_);
     }
 
     /// @notice allows buyer to purchase equity tokens from seller
@@ -333,6 +345,8 @@ contract TokenizedEquity is ERC20, ReentrancyGuard, Ownable {
 
         ///updates inital holders for next dillution sale
         initlalShareHolders = shareHolders;
+
+        emit SaleFinished(address(this), true);
     }
 
     function endPeerToPeerSale(address seller) internal {
