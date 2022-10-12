@@ -77,6 +77,26 @@ describe("TokenizedEquity", async function () {
             )
             assert.equal(status[0], 1)
         })
+        it("emits an event with the correct data", async function () {
+            const preShares = await equity.totalShares()
+            const values = ethers.utils.parseEther("10")
+
+            const tx = await equity.startDillutionSale(values, values)
+            const transactionRecipt = await tx.wait()
+
+            assert.equal(
+                values,
+                transactionRecipt.events[0].args.newShares.toString()
+            )
+            assert.equal(
+                values,
+                transactionRecipt.events[0].args.sharePrice.toString()
+            )
+            assert.equal(
+                preShares.add(values).toString(),
+                transactionRecipt.events[0].args.newTotalShares.toString()
+            )
+        })
     })
 
     describe("buyDillutionShares", async function () {
