@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.17;
 
 import "./TokenizedEquity.sol";
 
-/** @title Deqity Factory V1
+/** @title Deqity Factory V1.0.0
  *  @notice Allows user to deploy a contract to represent the equity of their organization.
  *  @author MaximilianFullStack
  */
@@ -31,6 +31,19 @@ contract DeqityFactory {
         address[] shareholders,
         uint256[] shares
     );
+
+    /** === Modifiers === **/
+
+    /** @dev Prevents functions from being called by addresses that are
+     *  not the owner address.
+     */
+    modifier onlyOwner() {
+        require(
+            msg.sender == adminFeeSetter,
+            "Msg sender in not admin fee setter"
+        );
+        _;
+    }
 
     /* === RECEIVE FUNCTION === */
 
@@ -97,21 +110,13 @@ contract DeqityFactory {
     }
 
     /// @notice sets fee for all depolyed contracts. Sale amounts are divied by admin fee. e.g. 200 = 0.5%
-    function setAdminFee(uint16 adminFee_) external {
-        require(
-            msg.sender == adminFeeSetter,
-            "Only fee setter can change admin fee"
-        );
+    function setAdminFee(uint16 adminFee_) external onlyOwner {
         require(adminFee_ != adminFee, "New fee is the same as previous");
         adminFee = adminFee_;
     }
 
     /// @notice sets the address than can change fee amount and the fees are transfered to.
-    function setFeeSetter(address adminFeeSetter_) external {
-        require(
-            msg.sender == adminFeeSetter,
-            "Only fee setter can change admin fee setter"
-        );
+    function setFeeSetter(address adminFeeSetter_) external onlyOwner {
         require(
             adminFeeSetter != adminFeeSetter_,
             "New setter is the same as old"
@@ -119,8 +124,8 @@ contract DeqityFactory {
         adminFeeSetter = adminFeeSetter_;
     }
 
-    /// @notice transfers contract balance to the fee setter (doesnt matter who function caller is)
-    function withdrawl() external {
+    /// @notice transfers contract balance to the fee setter
+    function withdrawl() external onlyOwner {
         require(address(this).balance > 0, "No generated fees to withdraw");
         payable(adminFeeSetter).transfer(address(this).balance);
     }

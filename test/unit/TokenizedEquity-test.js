@@ -171,7 +171,7 @@ describe("TokenizedEquity", async function () {
             assert.equal(address, accounts[1].address)
             assert.equal(
                 depPostBal.sub(depPreBal).toString(),
-                ethers.utils.parseEther("5").div(200).toString()
+                ethers.utils.parseEther("5").toString()
             )
             assert.equal(shrHlderShrs.toString(), bal.toString())
             assert.equal(
@@ -446,7 +446,7 @@ describe("TokenizedEquity", async function () {
             )
 
             exposed = await exposed.connect(accounts[1])
-            await exposed._update(true)
+            await exposed._update()
 
             const depShareHolder = await exposed.shareHolders(0)
             const holder = await exposed.shareholdersInfo(accounts[1].address)
@@ -454,19 +454,11 @@ describe("TokenizedEquity", async function () {
             const bal = await exposed.balanceOf(accounts[1].address)
             const contractBal = await exposed.totalSupply()
             const equity = holder.equity
-            const initEquity = holder.initialEquity
 
             assert.equal(depShareHolder, 0)
             assert.equal(shares.toString(), bal.toString())
             assert.equal(
                 equity.toString(),
-                bal
-                    .mul(ethers.utils.parseEther("1"))
-                    .div(contractBal)
-                    .toString()
-            )
-            assert.equal(
-                initEquity.toString(),
                 bal
                     .mul(ethers.utils.parseEther("1"))
                     .div(contractBal)
@@ -497,7 +489,7 @@ describe("TokenizedEquity", async function () {
             const status = await equity.getContractStatus()
             const totalShares = await equity.totalShares()
             const shareholder = await equity.shareHolders(0)
-            const inital = await equity.initlalShareHolders(0)
+
             assert.equal(status[1], true)
             assert.equal(
                 bal.toString(),
@@ -505,7 +497,6 @@ describe("TokenizedEquity", async function () {
             )
             assert.equal(ethers.utils.formatEther(totalShares.toString()), 30)
             assert.equal(shareholder, deployer)
-            assert.equal(inital, deployer)
         })
     })
 
@@ -540,7 +531,7 @@ describe("TokenizedEquity", async function () {
                 "Still supply left to be sold"
             )
         })
-        it("pays shareholders and updates status variables", async function () {
+        it("pays majority company onwer", async function () {
             const accounts = await ethers.getSigners()
 
             await deployments.fixture(["exposedEquity"])
@@ -548,24 +539,12 @@ describe("TokenizedEquity", async function () {
                 "ExposedTokenizedEquity",
                 deployer
             )
-            await exposed.transfer(
-                accounts[6].address,
-                ethers.utils.parseEther("10")
-            )
             await exposed.startDillutionSale(
                 ethers.utils.parseEther("5"),
                 ethers.utils.parseEther("10")
             )
 
             const depPreBal = await accounts[0].getBalance()
-            const holderInfo = await exposed.shareholdersInfo(deployer)
-            const depEq = holderInfo.initialEquity
-
-            const hlderPreBal = await accounts[6].getBalance()
-            const holderInfo1 = await exposed.shareholdersInfo(
-                accounts[6].address
-            )
-            const hlderEq = holderInfo1.initialEquity
 
             exposed = await exposed.connect(accounts[1])
             await exposed.buyDillutionShares(ethers.utils.parseEther("5"), {
@@ -573,34 +552,14 @@ describe("TokenizedEquity", async function () {
             })
 
             const depPostBal = await accounts[0].getBalance()
-            const hlderPostBal = await accounts[6].getBalance()
 
             const status = await exposed.getContractStatus()
-            const holder = await exposed.initlalShareHolders(2)
+            const holder = await exposed.shareHolders(1)
 
             //fee is sent to deplyer since he is acting as factory
             assert.equal(
                 depPostBal.sub(depPreBal).toString(),
-                depEq
-                    .mul(
-                        ethers.utils
-                            .parseEther("50")
-                            .sub(ethers.utils.parseEther("50").div(200))
-                    )
-                    .div(ethers.utils.parseEther("1"))
-                    .add(ethers.utils.parseEther("0.25"))
-                    .toString()
-            )
-            assert.equal(
-                hlderPostBal.sub(hlderPreBal).toString(),
-                hlderEq
-                    .mul(
-                        ethers.utils
-                            .parseEther("50")
-                            .sub(ethers.utils.parseEther("50").div(200))
-                    )
-                    .div(ethers.utils.parseEther("1"))
-                    .toString()
+                ethers.utils.parseEther("50").toString()
             )
             assert.equal(status[0], 0)
             assert.equal(holder, accounts[1].address)

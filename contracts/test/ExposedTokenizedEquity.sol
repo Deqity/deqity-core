@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.17;
 
 import "../TokenizedEquity.sol";
 
@@ -25,8 +25,8 @@ contract ExposedTokenizedEquity is TokenizedEquity {
         )
     {}
 
-    function _update(bool init) public {
-        update(init);
+    function _update() public {
+        update();
     }
 
     function _initilizeEquity(
